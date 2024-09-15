@@ -10,19 +10,33 @@
             text-align: center;
             margin: 0;
             padding: 20px;
+            box-sizing: border-box;
         }
         #gameCanvas {
             border: 1px solid black;
             background-color: white;
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            aspect-ratio: 6 / 1;
         }
         .signal {
-            width: 50px;
-            height: 50px;
+            width: 8vw;
+            height: auto;
             display: inline-block;
         }
         .green { background-color: green; }
         .red { background-color: red; }
         .yellow { background-color: yellow; }
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+        #message {
+            font-size: 18px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -37,8 +51,8 @@
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
-        const signalWidth = 50;
-        const signalHeight = 50;
+        const signalWidth = canvas.width / 6; // Responsive width
+        const signalHeight = canvas.height / 2; // Responsive height
         const numSignals = 3;
         const signalColors = ['green', 'red', 'yellow'];
         const correctOrder = ['green', 'red', 'yellow'];
@@ -65,7 +79,7 @@
             for (let i = 0; i < currentSignals.length; i++) {
                 const color = currentSignals[i];
                 ctx.fillStyle = color;
-                ctx.fillRect(position + i * signalWidth, 25, signalWidth, signalHeight);
+                ctx.fillRect(position + i * signalWidth, canvas.height / 4, signalWidth, signalHeight);
             }
         }
 
@@ -74,7 +88,7 @@
             generateRandomSignals();
             // Move signals very quickly
             gameInterval = setInterval(() => {
-                position += 10; // Faster movement
+                position += canvas.width / 40; // Faster movement relative to canvas width
                 drawSignals(position);
                 if (position > canvas.width) {
                     position = -signalWidth;
