@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signal Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+        #gameCanvas {
+            border: 1px solid black;
+            background-color: white;
+        }
+        .signal {
+            width: 50px;
+            height: 50px;
+            display: inline-block;
+        }
+        .green { background-color: green; }
+        .red { background-color: red; }
+        .yellow { background-color: yellow; }
+    </style>
+</head>
+<body>
+    <h1>Signal Game</h1>
+    <p>Signal colors will move from left to right. Click "Complete" when the correct order is displayed.</p>
+    <canvas id="gameCanvas" width="600" height="100"></canvas>
+    <br>
+    <button onclick="completeGame()">Complete</button>
+    <button onclick="restartGame()">Restart</button>
+    <p id="message"></p>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const signalWidth = 50;
+        const signalHeight = 50;
+        const numSignals = 3;
+        const signalColors = ['green', 'red', 'yellow'];
+        const correctOrder = ['green', 'red', 'yellow'];
+
+        let currentSignals = [];
+        let gameInterval;
+        let gameStarted = false;
+
+        function generateRandomSignals() {
+            // 10% chance to use the correct order
+            if (Math.random() < 0.1) {
+                currentSignals = [...correctOrder];
+            } else {
+                currentSignals = [];
+                for (let i = 0; i < numSignals; i++) {
+                    const randomColor = signalColors[Math.floor(Math.random() * signalColors.length)];
+                    currentSignals.push(randomColor);
+                }
+            }
+        }
+
+        function drawSignals(position) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < currentSignals.length; i++) {
+                const color = currentSignals[i];
+                ctx.fillStyle = color;
+                ctx.fillRect(position + i * signalWidth, 25, signalWidth, signalHeight);
+            }
+        }
+
+        function moveSignals() {
+            let position = -signalWidth;
+            generateRandomSignals();
+            // Move signals very quickly
+            gameInterval = setInterval(() => {
+                position += 10; // Faster movement
+                drawSignals(position);
+                if (position > canvas.width) {
+                    position = -signalWidth;
+                    generateRandomSignals();
+                }
+            }, 10); // Faster updates
+        }
+
+        function completeGame() {
+            if (!gameStarted) return;
+
+            clearInterval(gameInterval);
+
+            const signalsMatch = currentSignals.join(' ') === correctOrder.join(' ');
+            const message = signalsMatch ? "Correct order! You win!" : "Incorrect order. You lose.";
+            document.getElementById('message').innerText = message;
+            gameStarted = false;
+        }
+
+        function restartGame() {
+            if (gameStarted) {
+                clearInterval(gameInterval);
+            }
+            document.getElementById('message').innerText = '';
+            gameStarted = true;
+            moveSignals();
+        }
+
+        // Start the game when the page loads
+        restartGame();
+    </script>
+</body>
+</html>
