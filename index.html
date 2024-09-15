@@ -21,11 +21,11 @@
             aspect-ratio: 6 / 1;
         }
         .signal {
-            width: 8vw;
+            width: 10px;
             height: auto;
-            display: inline-block;
+            display: inline;
         }
-        .green { background-color: green; }
+        .green { background-color: green;  }
         .red { background-color: red; }
         .yellow { background-color: yellow; }
         button {
@@ -51,8 +51,8 @@
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
-        const signalWidth = canvas.width / 6; // Responsive width
-        const signalHeight = canvas.height / 2; // Responsive height
+        const signalWidth = canvas.width / 20; // Responsive width
+        const signalHeight = canvas.height / 3; // Responsive height
         const numSignals = 3;
         const signalColors = ['green', 'red', 'yellow'];
         const correctOrder = ['green', 'red', 'yellow'];
@@ -79,7 +79,7 @@
             for (let i = 0; i < currentSignals.length; i++) {
                 const color = currentSignals[i];
                 ctx.fillStyle = color;
-                ctx.fillRect(position + i * signalWidth, canvas.height / 4, signalWidth, signalHeight);
+                ctx.fillRect(position + i * signalWidth, canvas.height /3, signalWidth, signalHeight);
             }
         }
 
@@ -88,7 +88,7 @@
             generateRandomSignals();
             // Move signals very quickly
             gameInterval = setInterval(() => {
-                position += canvas.width / 40; // Faster movement relative to canvas width
+                position += canvas.width / 80; // Faster movement relative to canvas width
                 drawSignals(position);
                 if (position > canvas.width) {
                     position = -signalWidth;
